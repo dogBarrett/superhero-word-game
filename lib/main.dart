@@ -1,9 +1,11 @@
-import 'package:SuperHeroWordGame/wordsearch_widget.dart';
-import 'package:SuperHeroWordGame/quiz.dart';
+import 'package:superhero_word_game/wordsearch_widget.dart';
+import 'package:superhero_word_game/quiz.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import 'guessTheImage.dart';
+import 'guesstheimage.dart';
+import 'main_menu.dart';
 import 'wordsearch_menu.dart';
 
 // @dart=2.9
@@ -15,6 +17,10 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    return ScreenUtilInit(
+        //designSize: const Size(414.0, 896.0),
+        //builder: () => MaterialApp(
+        builder: (context , child) {
     return MaterialApp(
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
@@ -35,10 +41,10 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       //home: MyHomePage(title: 'Simple Crossword Game'),
-      home: WordSearchMenu(),
+      home: MainMenu(),
     );
-  }
-}
+  });
+}}
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);

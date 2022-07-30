@@ -1,7 +1,8 @@
 import 'dart:async';
 
-import 'package:SuperHeroWordGame/globals.dart';
+import 'package:superhero_word_game/wordsearch_words.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:word_search/word_search.dart';
 
@@ -25,11 +26,14 @@ class _WordSearchWidget extends State<WordSearchWidget> {
   int correctAnswers = 0;
   int totalAnswers = 0;
 
-  double fontSize = 10;
+  double fontSize = 10.sp;
   int numBoxPerRow = 20;
   double padding = 5;
   Size sizeBox = Size.zero;
   int numberOfWords = 0;
+
+  double boxDimensions = 0;
+
 
   ValueNotifier<List<List<String>>> listChars;
   ValueNotifier<List<CrosswordAnswer>> answerList;
@@ -42,6 +46,13 @@ class _WordSearchWidget extends State<WordSearchWidget> {
     correctAnswers = 0;
     getRecords();
     setVarsFromDifficulty();
+
+    if (.6.sh > .97.sw){
+      boxDimensions = .97.sw;}
+    else{
+      boxDimensions = .6.sh;
+    }
+
     listChars = new ValueNotifier<List<List<String>>>([]);
     answerList = new ValueNotifier<List<CrosswordAnswer>>([]);
     currentDragObj = new ValueNotifier<CurrentDragObj>(new CurrentDragObj());
@@ -121,7 +132,7 @@ class _WordSearchWidget extends State<WordSearchWidget> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    //Size size = MediaQuery.of(context).size;
     String twoDigits(int n) => n.toString().padLeft(2, '0');
     final minutes = twoDigits(duration.inMinutes.remainder(60));
     final seconds = twoDigits(duration.inSeconds.remainder(60));
@@ -160,8 +171,8 @@ class _WordSearchWidget extends State<WordSearchWidget> {
 
                     //color: Colors.blue,
                     alignment: Alignment.center,
-                    width: double.maxFinite,
-                    height: size.width - padding * 2,
+                    height: boxDimensions,
+                    width: boxDimensions,
                     padding: EdgeInsets.all(padding),
                     margin: EdgeInsets.all(padding),
                     child: drawCrosswordBox(),
@@ -171,12 +182,12 @@ class _WordSearchWidget extends State<WordSearchWidget> {
                     // lets show list word we need solve
                     child: drawAnswerList(),
                   ),
-                  ElevatedButton(
+                  /*ElevatedButton(
                     child: Text("Reset"),
                     onPressed: () {
                       resetPuzzle();
                     },
-                  )
+                  )*/
                 ]))));
   }
 
@@ -275,21 +286,53 @@ class _WordSearchWidget extends State<WordSearchWidget> {
             return Dialog(
               backgroundColor: Colors.white,
               child: Container(
-                width: MediaQuery.of(context).size.width * .9,
-                height: MediaQuery.of(context).size.width * .9,
+                width: .9.sw,
+                height: .9.sh,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   mainAxisSize: MainAxisSize.max,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text("PUZZLE FINISHED"),
-                    Text("Your time: $displayMinutes:$displaySeconds"),
-                    Text((record <= finalTime)
-                        ? "Current record: $displayRecordMinutes:$displayRecordSeconds"
-                        : "Previous record: $displayRecordMinutes:$displayRecordSeconds"),
-                    Text((record <= finalTime)
-                        ? ""
-                        : "Well done, you have the new record!"),
+                    Text(
+                      "PUZZLE FINISHED",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 30.sp,
+                        //color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      "Your time: $displayMinutes:$displaySeconds",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 20.sp,
+                        //color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      (record <= finalTime || record == 0)
+                          ? "Current record: $displayRecordMinutes:$displayRecordSeconds"
+                          : "Previous record: $displayRecordMinutes:$displayRecordSeconds",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 20.sp,
+                        //color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      (finalTime < record || record == 0)
+                          ? "Well done, you have the new record!"
+                          : "",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 30.sp,
+                        //color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                     ElevatedButton(
                       child: Text("CONTINUE"),
                       onPressed: () {
@@ -300,7 +343,7 @@ class _WordSearchWidget extends State<WordSearchWidget> {
                     ),
                   ],
                 ),
-                padding: const EdgeInsets.all(0.0),
+                padding: const EdgeInsets.all(10.0),
                 alignment: Alignment.center,
               ),
             );
@@ -313,7 +356,8 @@ class _WordSearchWidget extends State<WordSearchWidget> {
   int calculateIndexBasePosLocal(Offset localPosition) {
     // get size max per box
     double maxSizeBox =
-        ((sizeBox.width - (numBoxPerRow - 1) * padding) / numBoxPerRow);
+    //    ((sizeBox.width - (numBoxPerRow - 1) * padding) / numBoxPerRow);
+        ((boxDimensions - (numBoxPerRow - 1) * padding) / numBoxPerRow);
 
     if (localPosition.dy > sizeBox.width || localPosition.dx > sizeBox.width)
       return -1;
@@ -415,7 +459,8 @@ class _WordSearchWidget extends State<WordSearchWidget> {
       onPointerMove: (event) => onDragUpdate(event),
       child: LayoutBuilder(
         builder: (context, constraints) {
-          sizeBox = Size(constraints.maxWidth, constraints.maxWidth);
+          //sizeBox = Size(constraints.maxWidth, constraints.maxWidth);
+          sizeBox = Size(.7.sh, .7.sh);
           return GridView.builder(
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               childAspectRatio: 1,
@@ -439,7 +484,6 @@ class _WordSearchWidget extends State<WordSearchWidget> {
                 child: ValueListenableBuilder(
                   valueListenable: currentDragObj,
                   builder: (context, CurrentDragObj value, child) {
-                    //Color color = Colors.yellow;
                     Color color;
 
                     if (value.currentDragLine.contains(index))
@@ -457,7 +501,7 @@ class _WordSearchWidget extends State<WordSearchWidget> {
                       child: Text(
                         char.toUpperCase(),
                         style: TextStyle(
-                            fontSize: fontSize, fontWeight: FontWeight.bold),
+                            fontSize: getFontSize(), fontWeight: FontWeight.bold),
                       ),
                     );
                   },
@@ -522,6 +566,7 @@ class _WordSearchWidget extends State<WordSearchWidget> {
 
   drawAnswerList() {
     return Container(
+      height: .25.sh,
       child: ValueListenableBuilder(
         valueListenable: answerList,
         builder: (context, List<CrosswordAnswer> value, child) {
@@ -551,15 +596,13 @@ class _WordSearchWidget extends State<WordSearchWidget> {
                   int indexArray = (index) * perColTotal + indexChild;
 
                   return Container(
-                    width: MediaQuery.of(context).size.width / 3.3,
+                    width: .3.sw,
                     child: Text(
                       // make text more clearly to read
                       "${value[indexArray].wsLocation.word}".toUpperCase(),
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        fontSize: (difficulty < 2) ? 18 : 14,
-                        //fontSize: 18,
-
+                        fontSize: getAnswersFontSize(),
                         color: value[indexArray].done
                             ? Colors.green
                             : Colors.black,
@@ -582,6 +625,32 @@ class _WordSearchWidget extends State<WordSearchWidget> {
         },
       ),
     );
+  }
+
+  getFontSize() {
+    switch (difficulty){
+      case 1:
+        return 20.sp;
+      case 2:
+        return 16.sp;
+      case 3:
+        return 14.sp;
+      case 4:
+        return 12.sp;
+    }
+  }
+
+  getAnswersFontSize() {
+    switch (difficulty){
+      case 1:
+        return 18.sp;
+      case 2:
+        return 16.sp;
+      case 3:
+        return 12.sp;
+      case 4:
+        return 12.sp;
+    }
   }
 }
 

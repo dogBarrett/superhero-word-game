@@ -50,13 +50,26 @@ class _MultiQuiz extends State<MultiQuiz> {
     return new WillPopScope(
         onWillPop: () async => false,
         child: Scaffold(
-
+          appBar: AppBar(
+            centerTitle: true,
+            backgroundColor: Colors.black,
+            title: Text("QUIZ"),
+            leading: IconButton(
+              icon: Icon(
+                Icons.arrow_back_ios,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ),
           body: new Container(
             margin: const EdgeInsets.all(10.0),
             alignment: Alignment.topCenter,
             child: new Column(
               children: <Widget>[
-                new Padding(padding: EdgeInsets.all(20.0)),
+                //new Padding(padding: EdgeInsets.all(20.0)),
 
                 new Container(
                   alignment: Alignment.centerRight,
@@ -195,7 +208,7 @@ class _MultiQuiz extends State<MultiQuiz> {
                   ],
                 ),
 
-                new Padding(padding: EdgeInsets.all(15.0)),
+                //new Padding(padding: EdgeInsets.all(15.0)),
 
                 new Container(
                     alignment: Alignment.bottomCenter,

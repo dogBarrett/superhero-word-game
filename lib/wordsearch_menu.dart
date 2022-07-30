@@ -1,8 +1,9 @@
 import 'dart:core';
 
-import 'package:SuperHeroWordGame/wordsearch_widget.dart';
-import 'package:SuperHeroWordGame/globals.dart';
+import 'package:superhero_word_game/wordsearch_widget.dart';
+import 'package:superhero_word_game/wordsearch_words.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class WordSearchMenu extends StatefulWidget {
   @override
@@ -10,7 +11,6 @@ class WordSearchMenu extends StatefulWidget {
 }
 
 class _WordSearchMenu extends State<WordSearchMenu> {
-
   @override
   Widget build(BuildContext context) {
     var appBarHeight = AppBar().preferredSize.height;
@@ -31,8 +31,8 @@ class _WordSearchMenu extends State<WordSearchMenu> {
           ),
         ),
         body: Container(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
+            width: 1.sw,
+            height: 1.sh,
             color: Colors.black,
             child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -50,44 +50,51 @@ class _WordSearchMenu extends State<WordSearchMenu> {
                         difficultyButton("Insane", 4),
                       ]),
                   Container(
-                    height: MediaQuery.of(context).size.height * .8,
-                    width: MediaQuery.of(context).size.width * .97,
+                    height: .75.sh,
+                    width: .97.sw,
                     child: SingleChildScrollView(
                       child: Column(
                         children: <Widget>[
-                          button("Iron Man", "ironman"),
+                          button("Avengers", "avengers"),
+                          button("Batman", "batman"),
                           button("Black Panther", "blackpanther"),
+                          button("Captain America", "captainamerica"),
+                          button("Iron Man", "ironman"),
+                          button("Justice League", "justiceleague"),
                           button("Guardians of the Galaxy",
                               "guardiansofthegalaxy"),
                           button("Spider Man", "spiderman"),
-                          button("Avengers", "avengers"),
-                          button("Captain America", "captainamerica"),
-                          button("Batman", "batman"),
-                          button("Venom", "venom"),
+                          button("Superman", "superman"),
                           button("Thor", "thor"),
+                          button("Venom", "venom"),
                         ],
-                        //),
                       ),
-                      //padding: EdgeInsets.only(left: 0.02.sh, right: 0.02.sh),
                     ),
                   ),
                 ])));
   }
 
-  ElevatedButton difficultyButton(String text, int level) {
-    return ElevatedButton(
-      child: Text(text),
-      onPressed: () {
-        difficulty = level;
-        setState(() {});
-      },
-      style: difficulty != level
-          ? ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(Colors.white24))
-          : ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(Colors.blueGrey),
+  SizedBox difficultyButton(String text, int level) {
+    return SizedBox(
+        height: .05.sh,
+        width: .23.sw,
+        child: ElevatedButton(
+          child: Text(
+            text,
+            style: TextStyle(
+              fontSize: 10.sp,
             ),
-    );
+          ),
+          onPressed: () {
+            difficulty = level;
+            setState(() {});
+          },
+          style: difficulty != level
+              ? ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(Colors.white24))
+              : ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(Colors.blueGrey)),
+        ));
   }
 
   GestureDetector button(String title, String text) {
@@ -112,51 +119,54 @@ class _WordSearchMenu extends State<WordSearchMenu> {
     imageFile = "images/${imageFile}.jpeg";
 
     return Container(
-      height: 0.1 * MediaQuery.of(context).size.height,
-      width: 1 * MediaQuery.of(context).size.width,
+      height: 0.1.sh,
+      width: 1.sw,
       decoration: BoxDecoration(
         color: Colors.white.withOpacity(1),
-        borderRadius:
-            BorderRadius.circular(0.02 * MediaQuery.of(context).size.width),
+        borderRadius: BorderRadius.circular(0.02.sw),
       ),
-      margin:
-          EdgeInsets.only(bottom: 0.01 * MediaQuery.of(context).size.height),
+      margin: EdgeInsets.only(bottom: 0.01.sh),
       child: Stack(
         children: <Widget>[
           ClipRRect(
-            borderRadius:
-                BorderRadius.circular(0.02 * MediaQuery.of(context).size.width),
+            borderRadius: BorderRadius.circular(0.02.sw),
             child: Container(
-              height: 0.4 * MediaQuery.of(context).size.height,
+              height: 0.4.sh,
+              width: 1.sw,
               decoration: BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage(imageFile),
                   fit: BoxFit.cover,
                   colorFilter: ColorFilter.mode(
-                    Colors.black.withOpacity(0.3),
+                    Colors.black.withOpacity(0.5),
                     BlendMode.srcOver,
                   ),
                 ),
               ),
-              width: MediaQuery.of(context).size.width,
             ),
           ),
           Positioned(
             top: 0,
             left: 0,
             child: Container(
-              margin: EdgeInsets.only(
-                  left: 0.05 * MediaQuery.of(context).size.width,
-                  top: 0.04 * MediaQuery.of(context).size.height),
-              child: Text(
-                thisTitle.toUpperCase(),
-                style: TextStyle(
-                  fontSize: 18,
-                  letterSpacing: 0.3,
-                  wordSpacing: 1,
-                  color: Colors.white,
-                ),
-              ),
+              height: 0.1.sh,
+              width: 1.sw,
+              margin: EdgeInsets.only(left: 0.05.sw),
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.max,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      thisTitle.toUpperCase(),
+                      style: TextStyle(
+                        fontSize: 18.sp,
+                        letterSpacing: 0.3,
+                        wordSpacing: 1,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ]),
             ),
           ),
         ],

@@ -1,4 +1,4 @@
-# SuperHeroWordGame
+# superhero_word_game
 
 A new Flutter project.
 
