@@ -284,19 +284,22 @@ class _WordFindWidgetState extends State<WordFindWidget> {
                   borderRadius: BorderRadius.circular(.02.sw),
                 ),
                 alignment: Alignment.center,
-                child: FlatButton(
+                child: SizedBox(
                   height: constraints.biggest.height,
-                  child: Text(
-                    "${currentQues.arrayBtns[index]}".toUpperCase(),
-                    style: TextStyle(
-                      fontSize: 20.sp,
-                      fontWeight: FontWeight.bold,
+                  child: TextButton(
+                    child: Text(
+                      "${currentQues.arrayBtns[index]}".toUpperCase(),
+                      style: TextStyle(
+                        fontSize: 20.sp,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                      //textAlign: TextAlign.left,
                     ),
-                    //textAlign: TextAlign.left,
+                    onPressed: () {
+                      if (!statusBtn) setBtnClick(index);
+                    },
                   ),
-                  onPressed: () {
-                    if (!statusBtn) setBtnClick(index);
-                  },
                 ),
               );
             },
