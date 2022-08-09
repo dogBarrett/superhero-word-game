@@ -31,12 +31,37 @@ dependencies:
 
   # install this plugins 1st
   word_search: ^0.1.2
-  shared_preferences: 0.5.12+4
+  #shared_preferences: 0.5.12+4
   flutter_screenutil: ^5.5.3+2
+  sudoku_solver_generator: ^2.1.0+1
+
+  # Saving Preferences Locally
+  shared_preferences: ^2.0.15
+
+  # Animated Alert Dialogs
+  flutter_animated_dialog: ^2.0.1
+
+  # Splashscreen 1.4.0
+  splashscreen:
+    git:
+      url: https://github.com/DPLYR-dev/SplashScreenFlutterPackage.git
+      ref: a05b64f8326f7c2615491e9f47a1f2dcf8b28a69
+
+  # Hyperlinks
+  url_launcher: ^6.1.4
+
+  # Windows Title Bar
+  bitsdojo_window: ^0.1.2
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+  flutter_lints: ^2.0.1
+
+  # Native Splashscreen
+  flutter_native_splash: ^2.2.3+1
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

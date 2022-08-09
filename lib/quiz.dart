@@ -1,52 +1,41 @@
-import 'package:flutter/material.dart';
+import 'dart:math';
 
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:superhero_word_game/guesstheimage_questions.dart';
+import 'package:superhero_word_game/quiz_questions.dart';
 
 var finalScore = 0;
 var questionNumber = 0;
-var quiz = new MultipleAnswerQuiz("", "", "", "");
+var hasBeenDone =
+    List<bool>.filled(multipleAnswerQuizList.length, false, growable: false);
+var randomNumber = new Random();
+var hintDone = List<bool>.filled(4, false, growable: false);
+int hintsUsed = 0;
 
-class MultipleAnswerQuiz{
-  var image;
-  var question;
-  var options;
-  var correct;
+bool answerSelected = false;
 
-  MultipleAnswerQuiz(this.image, this.question, this.options, this.correct);
+int numberOfQuestions = multipleAnswerQuizList.length;
+int questionsDone = 0;
 
-  var images = [
-    "captainamerica", "blackpanther", "ironman", "avengers"
-  ];
-
-
-  var questions = [
-    "What is Captain America's real name?",
-    "_________ like to chase mice and birds.",
-    "Give a _________ a bone and he will find his way home",
-    "A nocturnal animal with some really big eyes",
-  ];
-
-
-  var choices = [
-    ["Steve Rogers", "Bucky Rogers", "Bruce Banner", "Bruce Wayne"],
-    ["Cat", "Snail", "Slug", "Horse"],
-    ["Mouse", "Dog", "Elephant", "Donkey"],
-    ["Spider", "Snake", "Hawk", "Owl"]
-  ];
-
-
-  var correctAnswers = [
-    "Steve Rogers", "Cat", "Dog", "Owl"
-  ];
-}
 class MultiQuiz extends StatefulWidget {
   @override
   _MultiQuiz createState() => new _MultiQuiz();
 }
 
 class _MultiQuiz extends State<MultiQuiz> {
+  @override
+  void initState() {
+    super.initState();
+    initialiseVariables();
+  }
 
   @override
   Widget build(BuildContext context) {
+    print(hintsUsed);
+    print(questionsDone);
+    print(numberOfQuestions);
+
     return new WillPopScope(
         onWillPop: () async => false,
         child: Scaffold(
@@ -65,201 +54,198 @@ class _MultiQuiz extends State<MultiQuiz> {
             ),
           ),
           body: new Container(
-            margin: const EdgeInsets.all(10.0),
+            color: Colors.grey,
+            //child: Container(
+            //margin: const EdgeInsets.all(10.0),
             alignment: Alignment.topCenter,
             child: new Column(
               children: <Widget>[
-                //new Padding(padding: EdgeInsets.all(20.0)),
-
-                new Container(
-                  alignment: Alignment.centerRight,
-                  child: new Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-
-                      new Text("Question ${questionNumber + 1} of ${quiz.questions.length}",
-                        style: new TextStyle(
-                            fontSize: 22.0
-                        ),),
-
-                      new Text("Score: $finalScore",
-                        style: new TextStyle(
-                            fontSize: 22.0
-                        ),)
-                    ],
-                  ),
-                ),
-
-
-                //image
-                new Padding(padding: EdgeInsets.all(10.0)),
-
+                topRow(),
                 Container(
-                  height: 400,
+                  //padding: EdgeInsets.all(.05.sw),
+                  padding: EdgeInsets.fromLTRB(.05.sw, .05.sh, .05.sw, .05.sh),
+                  height: .4.sh,
                   child: new Image.asset(
-                    "images/${quiz.images[questionNumber]}.jpeg",
+                    "images/${multipleAnswerQuizList[questionNumber].image}.jpeg",
                   ),
                 ),
 
+                //Expanded(
                 Container(
-                  height: 100,
-                  child: new Text(quiz.questions[questionNumber],
+                  height: .1.sh,
+                  padding: EdgeInsets.fromLTRB(.02.sw, 0, .02.sw, 0),
+                  //height: 100,
+                  child: new Text(
+                    multipleAnswerQuizList[questionNumber].question,
+                    textAlign: TextAlign.center,
                     style: new TextStyle(
-                      fontSize: 20.0,
-                    ),),
+                      fontSize: 20.0.sp,
+                      color: Colors.white,
+                    ),
+                  ),
                 ),
+                new Padding(padding: EdgeInsets.all(.01.sh)),
 
                 new Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
-
-                    //button 1
-                    new MaterialButton(
-                      minWidth: 120.0,
-                      color: Colors.blueGrey,
-                      onPressed: (){
-                        if(quiz.choices[questionNumber][0] == quiz.correctAnswers[questionNumber]){
-                          debugPrint("Correct");
-                          finalScore++;
-                        }else{
-                          debugPrint("Wrong");
-                        }
-                        updateQuestion();
-                      },
-                      child: new Text(quiz.choices[questionNumber][0],
-                        style: new TextStyle(
-                            fontSize: 20.0,
-                            color: Colors.white
-                        ),),
-                    ),
-
-                    //button 2
-                    new MaterialButton(
-                      minWidth: 120.0,
-                      color: Colors.blueGrey,
-                      onPressed: (){
-
-                        if(quiz.choices[questionNumber][1] == quiz.correctAnswers[questionNumber]){
-                          debugPrint("Correct");
-                          finalScore++;
-                        }else{
-                          debugPrint("Wrong");
-                        }
-                        updateQuestion();
-                      },
-                      child: new Text(quiz.choices[questionNumber][1],
-                        style: new TextStyle(
-                            fontSize: 20.0,
-                            color: Colors.white
-                        ),),
-                    ),
-
+                    optionButton(0),
+                    optionButton(1),
                   ],
                 ),
 
-                new Padding(padding: EdgeInsets.all(10.0)),
+                new Padding(padding: EdgeInsets.all(.02.sh)),
 
                 new Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
-
-                    //button 3
-                    new MaterialButton(
-                      minWidth: 120.0,
-                      color: Colors.blueGrey,
-                      onPressed: (){
-
-                        if(quiz.choices[questionNumber][2] == quiz.correctAnswers[questionNumber]){
-                          debugPrint("Correct");
-                          finalScore++;
-                        }else{
-                          debugPrint("Wrong");
-                        }
-                        updateQuestion();
-                      },
-                      child: new Text(quiz.choices[questionNumber][2],
-                        style: new TextStyle(
-                            fontSize: 20.0,
-                            color: Colors.white
-                        ),),
-                    ),
-
-                    //button 4
-                    new MaterialButton(
-                      minWidth: 120.0,
-                      color: Colors.blueGrey,
-                      onPressed: (){
-
-                        if(quiz.choices[questionNumber][3] == quiz.correctAnswers[questionNumber]){
-                          debugPrint("Correct");
-                          finalScore++;
-                        }else{
-                          debugPrint("Wrong");
-                        }
-                        updateQuestion();
-                      },
-                      child: new Text(quiz.choices[questionNumber][3],
-                        style: new TextStyle(
-                            fontSize: 20.0,
-                            color: Colors.white
-                        ),),
-                    ),
-
+                    optionButton(2),
+                    optionButton(3),
                   ],
                 ),
-
-                //new Padding(padding: EdgeInsets.all(15.0)),
-
-                new Container(
-                    alignment: Alignment.bottomCenter,
-                    child:  new MaterialButton(
-                        minWidth: 240.0,
-                        height: 30.0,
-                        color: Colors.red,
-                        onPressed: resetQuiz,
-                        child: new Text("Quit",
-                          style: new TextStyle(
-                              fontSize: 18.0,
-                              color: Colors.white
-                          ),)
-                    )
-                ),
-
-
-
-
               ],
+              //),
             ),
           ),
-
-        )
-    );
+        ));
   }
 
-  void resetQuiz(){
-    setState(() {
-      Navigator.pop(context);
-      finalScore = 0;
-      questionNumber = 0;
-    });
+  void initialiseVariables() {
+    hintsUsed = 0;
+    questionsDone = 0;
+    answerSelected = false;
+
+    for (int i = 0; i < 4; i++) hintDone[i] = false;
+    for (int i = 0; i < multipleAnswerQuizList.length; i++) {
+      hasBeenDone[i] = false;
+    }
   }
 
+  Container topRow() {
+    return Container(
+        //height: .05.sh,
+        //color: Colors.red,
+        padding: EdgeInsets.all(10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            InkWell(
+              onTap: () => generateHint(),
+              child: Icon(
+                Icons.lightbulb,
+                size: 25.sp,
+                color: Colors.yellow[200],
+              ),
+            ),
+            InkWell(
+              onTap: () => {}, //generatePuzzle(),
+              child: Icon(
+                Icons.arrow_forward_ios,
+                size: 25.sp,
+                color: Colors.yellow[200],
+              ),
+            ),
+          ],
+        ));
+  }
 
-
-  void updateQuestion(){
-    setState(() {
-      if(questionNumber == quiz.questions.length - 1){
-        Navigator.push(context, new MaterialPageRoute(builder: (context)=> new Summary(score: finalScore,)));
-
-      }else{
-        questionNumber++;
+  void generateHint() {
+    //find correct answer from options
+    int correctAnswer = 0;
+    for (int i = 0; i < 4; i++) {
+      if (multipleAnswerQuizList[questionNumber].correct ==
+          multipleAnswerQuizList[questionNumber].options[i]) {
+        correctAnswer = i;
       }
-    });
+    }
+
+    //give hint of one of the incorrect answers
+    int hint = 0;
+    if (hintsUsed < 3) {
+      do {
+        hint = randomNumber.nextInt(4);
+      } while (hint == correctAnswer || hintDone[hint]);
+
+      setState(() {
+        hintsUsed++;
+        hintDone[hint] = true;
+      });
+    }
+  }
+
+  Container optionButton(int thisNumber) {
+    int correctAnswer;
+
+    for (int i = 0; i < 4; i++) {
+      if (multipleAnswerQuizList[questionNumber].correct ==
+          multipleAnswerQuizList[questionNumber].options[i]) {
+        correctAnswer = i;
+      }
+    }
+
+    //Color color = hintDone[thisNumber] ? Colors.white70 : Color(0xff7EE7FD);
+    Color color = hintDone[thisNumber]
+        ? Colors.white70
+        : (correctAnswer == thisNumber && answerSelected)
+            ? Colors.green
+            : Color(0xff7EE7FD);
+    return Container(
+        height: .06.sh,
+        width: .4.sw,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(.02.sw),
+        ),
+        child: MaterialButton(
+          color: color,
+          onPressed: () async {
+            if (multipleAnswerQuizList[questionNumber].options[thisNumber] ==
+                multipleAnswerQuizList[questionNumber].correct) {
+              debugPrint("Correct");
+              finalScore++;
+            } else {
+              debugPrint("Wrong");
+            }
+            answerSelected = true;
+            setState(() {});
+            await Future.delayed(Duration(seconds: 1));
+            //show correct answer box green for 1 second
+            hasBeenDone[questionNumber] = true;
+            answerSelected = false;
+            questionsDone++;
+            updateQuestion();
+          },
+          child: new Text(
+            multipleAnswerQuizList[questionNumber].options[thisNumber],
+            style: new TextStyle(fontSize: 10.sp, color: Colors.black),
+          ),
+        ));
+  }
+
+  Future<void> updateQuestion() async {
+    if (questionsDone < numberOfQuestions) {
+      setState(() {
+        hintsUsed = 0;
+        for (int i = 0; i < 4; i++) hintDone[i] = false;
+
+        do {
+          questionNumber = randomNumber.nextInt(multipleAnswerQuizList.length);
+        } while (hasBeenDone[questionNumber]);
+      });
+    } else {
+      hintsUsed = 0;
+      questionsDone = 0;
+      answerSelected = false;
+      for (int i = 0; i < 4; i++) hintDone[i] = false;
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => Summary(score: finalScore),
+        ),
+      );
+    }
   }
 }
 
-
-class Summary extends StatelessWidget{
+class Summary extends StatelessWidget {
   final int score;
   Summary({Key key, @required this.score}) : super(key: key);
 
@@ -268,40 +254,33 @@ class Summary extends StatelessWidget{
     return new WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
-
         body: new Container(
           child: new Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-
-              new Text("Final Score: $score",
-                style: new TextStyle(
-                    fontSize: 35.0
-                ),),
-
+              new Text(
+                "Final Score: $score",
+                style: new TextStyle(fontSize: 35.0),
+              ),
               new Padding(padding: EdgeInsets.all(30.0)),
-
               new MaterialButton(
                 color: Colors.red,
-                onPressed: (){
+                onPressed: () {
                   questionNumber = 0;
                   finalScore = 0;
-                  Navigator.pop(context);
+                  Navigator.of(context)
+                    ..pop()
+                    ..pop();
                 },
-                child: new Text("Reset Quiz",
-                  style: new TextStyle(
-                      fontSize: 20.0,
-                      color: Colors.white
-                  ),),)
-
+                child: new Text(
+                  "Reset Quiz",
+                  style: new TextStyle(fontSize: 20.0, color: Colors.white),
+                ),
+              )
             ],
           ),
         ),
-
-
       ),
     );
   }
-
-
 }

@@ -101,28 +101,28 @@ class _WordSearchWidget extends State<WordSearchWidget> {
       case 1:
         {
           numBoxPerRow = 9;
-          fontSize = 30;
+          fontSize = 30.sp;
           numberOfWords = 6;
           break;
         }
       case 2:
         {
           numBoxPerRow = 12;
-          fontSize = 24;
+          fontSize = 24.sp;
           numberOfWords = 9;
           break;
         }
       case 3:
         {
           numBoxPerRow = 16;
-          fontSize = 18;
+          fontSize = 18.sp;
           numberOfWords = 12;
           break;
         }
       case 4:
         {
           numBoxPerRow = 20;
-          fontSize = 14;
+          fontSize = 14.sp;
           numberOfWords = 12;
           break;
         }
@@ -151,6 +151,8 @@ class _WordSearchWidget extends State<WordSearchWidget> {
           ),
         ),
         body: Container(
+            color: Colors.grey[300],
+
             alignment: Alignment.center,
             child: Container(
                 child: Column(
@@ -159,7 +161,9 @@ class _WordSearchWidget extends State<WordSearchWidget> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                   Container(
+
                     decoration: new BoxDecoration(
+                      border: Border.all(color: Colors.black),
                         color: const Color(0xff7c94b6),
                         image: new DecorationImage(
                           colorFilter: new ColorFilter.mode(
@@ -643,7 +647,7 @@ class _WordSearchWidget extends State<WordSearchWidget> {
   getAnswersFontSize() {
     switch (difficulty){
       case 1:
-        return 18.sp;
+        return 16.sp;
       case 2:
         return 16.sp;
       case 3:

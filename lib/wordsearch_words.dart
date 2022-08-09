@@ -24,7 +24,7 @@ List<String> getWords(String category) {
 
       returnString.shuffle();
       return returnString;
-    case "spiderman":
+    case "spiderman_movie":
       returnString = [
         'spiderman',
         'peter',
@@ -238,6 +238,31 @@ List<String> getWords(String category) {
         'fly',
         'laser',
         'strength'
+      ];
+      if (difficulty >= 3) {
+        returnString.add('kryptonite');
+        returnString.add('dailyplanet');
+        returnString.add('metropolis');
+      }
+      returnString.shuffle();
+      return returnString;
+
+    case "eternals":
+      returnString = [
+        'ikaris',
+        'sersi',
+        'kingo',
+        'sprite',
+        'phastos',
+        'makkari',
+        'druig',
+        'gilgamesh',
+        'thena',
+        'ajak',
+        'karun',
+        'emergence',
+        'blip',
+        'dane'
       ];
       if (difficulty >= 3) {
         returnString.add('kryptonite');

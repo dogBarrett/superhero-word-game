@@ -1,6 +1,7 @@
 import 'dart:core';
 
 import 'package:superhero_word_game/quiz.dart';
+import 'package:superhero_word_game/sudoku/main.dart';
 import 'package:superhero_word_game/wordsearch_menu.dart';
 import 'package:superhero_word_game/wordsearch_widget.dart';
 import 'package:superhero_word_game/wordsearch_words.dart';
@@ -8,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'guesstheimage.dart';
-
 class MainMenu extends StatefulWidget {
   @override
   _MainMenu createState() => new _MainMenu();
@@ -41,8 +41,9 @@ class _MainMenu extends State<MainMenu> {
                       child: Column(
                         children: <Widget>[
                           button("Word Search", "wordsearch"),
-                          //button("Guess the Image (soon...)", "guesstheimage"),
-                          //button("Quiz (soon...)", "quiz"),
+                          button("Guess the Image", "guesstheimage"),
+                          button("Quiz", "quiz"),
+                          button("Sudoku", "sudoku"),
                         ],
                       ),
                       //padding: EdgeInsets.only(left: 0.02.sh, right: 0.02.sh),
@@ -73,6 +74,13 @@ class _MainMenu extends State<MainMenu> {
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (context) => MultiQuiz(),
+              ),
+            );
+            break;
+          case "sudoku":
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => Sudoku(),
               ),
             );
             break;
