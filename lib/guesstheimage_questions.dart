@@ -105,6 +105,10 @@ class GetQuestions {
           answer: "hulk",
           pathImage: "hulk"),
       WordFindQues(
+          question: "What is Hulk's real name? Bruce ......",
+          answer: "banner",
+          pathImage: "hulk"),
+      WordFindQues(
           question: "Who is this ..... Widow?",
           answer: "black",
           pathImage: "blackwidow"),
@@ -119,6 +123,10 @@ class GetQuestions {
       WordFindQues(
           question: "Who is this? Peter ......",
           answer: "parker",
+          pathImage: "spiderman"),
+      WordFindQues(
+          question: "Who Spider Man's Aunty? Aunt ...",
+          answer: "may",
           pathImage: "spiderman"),
 
     ];
