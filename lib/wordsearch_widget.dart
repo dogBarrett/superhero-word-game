@@ -38,6 +38,7 @@ class _WordSearchWidget extends State<WordSearchWidget> {
   ValueNotifier<List<List<String>>> listChars;
   ValueNotifier<List<CrosswordAnswer>> answerList;
   ValueNotifier<CurrentDragObj> currentDragObj;
+
   ValueNotifier<List<int>> charsDone;
 
   @override
@@ -216,8 +217,9 @@ class _WordSearchWidget extends State<WordSearchWidget> {
       return answer.answerLines.join("-") ==
           currentDragObj.value.currentDragLine.join("-");
     });
+print(currentDragObj.value.currentDragLine.join("-"));
 
-    print(currentDragObj.value.currentDragLine.join("-"));
+
     if (indexFound >= 0) {
       answerList.value[indexFound].done = true;
       correctAnswers++;
