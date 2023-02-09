@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:word_search/word_search.dart';
+import 'package:word_search_safety/word_search_safety.dart';
 
 import 'guesstheimage_questions.dart';
 

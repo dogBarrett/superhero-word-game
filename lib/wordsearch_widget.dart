@@ -4,7 +4,7 @@ import 'package:superhero_word_game/wordsearch_words.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:word_search/word_search.dart';
+import 'package:word_search_safety/word_search_safety.dart';
 
 class WordSearchWidget extends StatefulWidget {
   WordSearchWidget({Key key}) : super(key: key);
