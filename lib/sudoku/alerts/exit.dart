@@ -7,7 +7,7 @@ import '../main.dart';
 import '../styles.dart';
 
 class AlertExit extends StatelessWidget {
-  const AlertExit({Key key}) : super(key: key);
+  const AlertExit({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -6,7 +6,7 @@ class AlertGameOver extends StatelessWidget {
   static bool newGame = false;
   static bool restartGame = false;
 
-  const AlertGameOver({Key key}) : super(key: key);
+  const AlertGameOver({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

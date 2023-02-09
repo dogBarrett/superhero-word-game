@@ -231,7 +231,7 @@ List<String> getWords(String category) {
         'lane',
         'krypton',
         'lexluthor',
-        'tchaka',
+        'cape',
         'kalel',
         'zod',
         'jorel',

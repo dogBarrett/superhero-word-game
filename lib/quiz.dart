@@ -247,7 +247,7 @@ class _MultiQuiz extends State<MultiQuiz> {
 
 class Summary extends StatelessWidget {
   final int score;
-  Summary({Key key, @required this.score}) : super(key: key);
+  Summary({Key? key, @required this.score}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

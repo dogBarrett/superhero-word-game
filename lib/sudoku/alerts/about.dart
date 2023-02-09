@@ -13,7 +13,7 @@ class AlertAbout extends StatelessWidget {
   static const String licenseURL =
       "https://github.com/VarunS2002/Flutter-Sudoku/blob/master/LICENSE";
 
-  const AlertAbout({Key key}) : super(key: key);
+  const AlertAbout({Key? key}) : super(key: key);
 
   openURL(String url) async {
     await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);

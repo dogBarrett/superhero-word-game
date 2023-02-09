@@ -7,7 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:word_search_safety/word_search_safety.dart';
 
 class WordSearchWidget extends StatefulWidget {
-  WordSearchWidget({Key key}) : super(key: key);
+  WordSearchWidget({Key? key}) : super(key: key);
 
   @override
   _WordSearchWidget createState() => _WordSearchWidget();

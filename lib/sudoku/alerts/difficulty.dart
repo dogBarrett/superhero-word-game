@@ -6,7 +6,7 @@ import '../styles.dart';
 class AlertDifficultyState extends StatefulWidget {
   String currentDifficultyLevel;
 
-  AlertDifficultyState(this.currentDifficultyLevel, {Key key})
+  AlertDifficultyState(this.currentDifficultyLevel, {Key? key})
       : super(key: key);
 
   @override

@@ -6,7 +6,7 @@ import '../styles.dart';
 class AlertAccentColorsState extends StatefulWidget {
   String currentAccentColor;
 
-  AlertAccentColorsState(this.currentAccentColor, {Key key}) : super(key: key);
+  AlertAccentColorsState(this.currentAccentColor, {Key? key}) : super(key: key);
 
   static String get accentColor {
     return AlertAccentColors.accentColor;

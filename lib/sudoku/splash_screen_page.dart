@@ -5,7 +5,7 @@ import 'main.dart';
 import 'styles.dart';
 
 class SplashScreenPage extends StatefulWidget {
-  const SplashScreenPage({Key key}) : super(key: key);
+  const SplashScreenPage({Key? key}) : super(key: key);
 
   @override
   SplashScreenPageState createState() => SplashScreenPageState();

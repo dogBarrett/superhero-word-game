@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../styles.dart';
 
 class AlertNumbersState extends StatefulWidget {
-  const AlertNumbersState({Key key}) : super(key: key);
+  const AlertNumbersState({Key? key}) : super(key: key);
 
   @override
   AlertNumbers createState() => AlertNumbers();

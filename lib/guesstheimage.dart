@@ -7,7 +7,7 @@ import 'package:word_search_safety/word_search_safety.dart';
 import 'guesstheimage_questions.dart';
 
 class WordFind extends StatefulWidget {
-  WordFind({Key key}) : super(key: key);
+  WordFind({Key? key}) : super(key: key);
 
   @override
   _WordFindState createState() => _WordFindState();
@@ -81,7 +81,7 @@ class _WordFindState extends State<WordFind> {
 class WordFindWidget extends StatefulWidget {
   Size size;
   List<WordFindQues> listQuestions;
-  WordFindWidget(this.size, this.listQuestions, {Key key}) : super(key: key);
+  WordFindWidget(this.size, this.listQuestions, {Key? key}) : super(key: key);
 
   @override
   _WordFindWidgetState createState() => _WordFindWidgetState();

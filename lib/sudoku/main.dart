@@ -22,7 +22,7 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key key}) : super(key: key);
+  const MyApp({Key? key}) : super(key: key);
 
   static const String versionNumber = '2.4.1';
 
@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
 }
 
 class Sudoku extends StatefulWidget {
-  const Sudoku({Key key}) : super(key: key);
+  const Sudoku({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => SudokuState();
