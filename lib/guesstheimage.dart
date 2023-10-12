@@ -27,7 +27,7 @@ class _WordFindState extends State<WordFind> {
   }
 
   var randomNumber = new Random();
-  Size size;
+  late Size size;
   //List<WordFindQues> listQuestions;
   int indexQues = 0; // current index question
   int hintCount = 0;
@@ -89,13 +89,13 @@ class WordFindWidget extends StatefulWidget {
 
 class _WordFindWidgetState extends State<WordFindWidget> {
   var randomNumber = new Random();
-  Size size;
-  List<WordFindQues> listQuestions;
+  late Size size;
+  late List<WordFindQues> listQuestions;
   int indexQues = 0; // current index question
   int hintCount = 0;
-  WordFindQues currentQues;
-  int numberOfQuestions;
-  int questionsDone;
+  late WordFindQues currentQues;
+  late int numberOfQuestions;
+  late int questionsDone;
 
   // thanks for watching.. :)
 
@@ -213,9 +213,9 @@ class _WordFindWidgetState extends State<WordFindWidget> {
               Color color;
 
               if (currentQues.isDone)
-                color = Colors.green[300];
+                color = Colors.green[300]!;
               else if (puzzle.hintShow)
-                color = Colors.yellow[100];
+                color = Colors.yellow[100]!;
               else if (currentQues.isFull)
                 color = Colors.red;
               else
@@ -341,9 +341,9 @@ class _WordFindWidgetState extends State<WordFindWidget> {
       final WSNewPuzzle newPuzzle = wordSearch.newPuzzle(wl, ws);
 
       // check if got error generate random word
-      if (newPuzzle.errors.isEmpty) {
+      if (newPuzzle.errors!.isEmpty) {
         currentQues.arrayBtns =
-            newPuzzle.puzzle.expand((list) => list).toList();
+            newPuzzle.puzzle!.expand((list) => list).toList();
         currentQues.arrayBtns.shuffle(); // make shuffle so user not know answer
 
         bool isDone = currentQues.isDone;

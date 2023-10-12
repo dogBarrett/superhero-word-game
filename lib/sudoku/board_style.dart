@@ -7,7 +7,7 @@ MaterialColor emptyColor(bool gameOver) =>
     gameOver ? Styles.primaryColor : Styles.secondaryColor;
 
 Color buttonColor(int k, int i) {
-  Color color;
+  Color? color;
   if (([0, 1, 2].contains(k) && [3, 4, 5].contains(i)) ||
       ([3, 4, 5].contains(k) && [0, 1, 2, 6, 7, 8].contains(i)) ||
       ([6, 7, 8].contains(k) && [3, 4, 5].contains(i))) {
@@ -20,7 +20,7 @@ Color buttonColor(int k, int i) {
     color = Styles.primaryBackgroundColor;
   }
 
-  return color;
+  return color!;
 }
 
 double buttonSize() {

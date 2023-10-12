@@ -15,7 +15,7 @@ class WordSearchWidget extends StatefulWidget {
 
 class _WordSearchWidget extends State<WordSearchWidget> {
   Duration duration = Duration();
-  Timer timer;
+  late Timer timer;
   int minutes = 0;
   int seconds = 0;
 
@@ -35,11 +35,11 @@ class _WordSearchWidget extends State<WordSearchWidget> {
   double boxDimensions = 0;
 
 
-  ValueNotifier<List<List<String>>> listChars;
-  ValueNotifier<List<CrosswordAnswer>> answerList;
-  ValueNotifier<CurrentDragObj> currentDragObj;
+  late ValueNotifier<List<List<String>>> listChars;
+  late ValueNotifier<List<CrosswordAnswer>> answerList;
+  late ValueNotifier<CurrentDragObj> currentDragObj;
 
-  ValueNotifier<List<int>> charsDone;
+  late ValueNotifier<List<int>> charsDone;
 
   @override
   void initState() {
@@ -57,7 +57,7 @@ class _WordSearchWidget extends State<WordSearchWidget> {
     listChars = new ValueNotifier<List<List<String>>>([]);
     answerList = new ValueNotifier<List<CrosswordAnswer>>([]);
     currentDragObj = new ValueNotifier<CurrentDragObj>(new CurrentDragObj());
-    charsDone = new ValueNotifier<List<int>>(new List<int>());
+    charsDone = ValueNotifier<List<int>>(List<int>());
     generateRandomWord();
     startTimer();
   }
@@ -133,6 +133,7 @@ class _WordSearchWidget extends State<WordSearchWidget> {
 
   @override
   Widget build(BuildContext context) {
+
     //Size size = MediaQuery.of(context).size;
     String twoDigits(int n) => n.toString().padLeft(2, '0');
     final minutes = twoDigits(duration.inMinutes.remainder(60));
@@ -228,7 +229,7 @@ print(currentDragObj.value.currentDragLine.join("-"));
       charsDone.value.addAll(answerList.value[indexFound].answerLines);
       charsDone.notifyListeners();
       answerList.notifyListeners();
-      onDragEnd(null);
+      onDragEnd(null!);
     }
   }
 

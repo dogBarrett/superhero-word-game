@@ -24,7 +24,7 @@ class AlertDifficultyState extends StatefulWidget {
 
 class AlertDifficulty extends State<AlertDifficultyState> {
   // ignore: avoid_init_to_null
-  static String difficulty = null;
+  static String difficulty = "";
   static final List<String> difficulties = [
     'beginner',
     'easy',

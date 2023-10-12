@@ -12,10 +12,10 @@ class WordFindQues {
   List<String> arrayBtns = new List<String>();
 
   WordFindQues({
-    this.pathImage,
-    this.question,
-    this.answer,
-    this.arrayBtns,
+    required this.pathImage,
+    required this.question,
+    required this.answer,
+    required this.arrayBtns,
   });
 
   void setWordFindChar(List<WordFindChar> puzzles) => this.puzzles = puzzles;
@@ -50,7 +50,7 @@ class WordFindQues {
     return new WordFindQues(
       answer: this.answer,
       pathImage: this.pathImage,
-      question: this.question,
+      question: this.question, arrayBtns: [],
     );
   }
 

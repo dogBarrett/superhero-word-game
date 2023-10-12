@@ -4,7 +4,7 @@ import '../styles.dart';
 
 // ignore: must_be_immutable
 class AlertAccentColorsState extends StatefulWidget {
-  String currentAccentColor;
+  String currentAccentColor = "";
 
   AlertAccentColorsState(this.currentAccentColor, {Key? key}) : super(key: key);
 
@@ -23,9 +23,9 @@ class AlertAccentColorsState extends StatefulWidget {
 
 class AlertAccentColors extends State<AlertAccentColorsState> {
   // ignore: avoid_init_to_null
-  static String accentColor = null;
+  //static String accentColor = Colors.black;
   static final List<String> accentColors = [...Styles.accentColors.keys];
-  String currentAccentColor;
+  String currentAccentColor = "";
 
   AlertAccentColors(this.currentAccentColor);
 

@@ -52,13 +52,13 @@ class SudokuState extends State<Sudoku> {
   int timesCalled = 0;
   bool isButtonDisabled = false;
   bool isFABDisabled = false;
-  List<List<List<int>>> gameList;
-  List<List<int>> game;
-  List<List<int>> gameCopy;
-  List<List<int>> gameSolved;
-  static String currentDifficultyLevel;
-  static String currentTheme;
-  static String currentAccentColor;
+  late List<List<List<int>>> gameList;
+  late List<List<int>> game;
+  late List<List<int>> gameCopy;
+  late List<List<int>> gameSolved;
+  late String currentDifficultyLevel;
+  late String currentTheme;
+  late String currentAccentColor;
   static String platform = () {
     if (kIsWeb) {
       return 'web-${defaultTargetPlatform.toString().replaceFirst("TargetPlatform.", "").toLowerCase()}';
