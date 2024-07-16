@@ -1,4 +1,4 @@
-import 'dart:math';
+/*import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -174,7 +174,7 @@ class _MultiQuiz extends State<MultiQuiz> {
   }
 
   Container optionButton(int thisNumber) {
-    int correctAnswer;
+    int correctAnswer = 0;
 
     for (int i = 0; i < 4; i++) {
       if (multipleAnswerQuizList[questionNumber].correct ==
@@ -248,7 +248,7 @@ class _MultiQuiz extends State<MultiQuiz> {
 
 class Summary extends StatelessWidget {
   final int score;
-  Summary({Key? key, @required this.score}) : super(key: key);
+  Summary({Key? key, required this.score}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -278,6 +278,262 @@ class Summary extends StatelessWidget {
                   style: new TextStyle(fontSize: 20.0, color: Colors.white),
                 ),
               )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+*/
+
+import 'dart:math';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:superhero_word_game/guesstheimage_questions.dart';
+import 'package:superhero_word_game/quiz_questions.dart';
+
+class MultiQuiz extends StatefulWidget {
+  @override
+  _MultiQuizState createState() => _MultiQuizState();
+}
+
+class _MultiQuizState extends State<MultiQuiz> {
+  final Random _random = Random();
+  int _finalScore = 0;
+  int _questionNumber = 0;
+  int _hintsUsed = 0;
+  int _questionsDone = 0;
+  bool _answerSelected = false;
+  List<bool> _hasBeenDone = List<bool>.filled(multipleAnswerQuizList.length, false);
+  List<bool> _hintDone = List<bool>.filled(4, false);
+
+  @override
+  void initState() {
+    super.initState();
+    _initialiseVariables();
+  }
+
+  void _initialiseVariables() {
+    _hintsUsed = 0;
+    _questionsDone = 0;
+    _answerSelected = false;
+    _hintDone = List<bool>.filled(4, false);
+    _hasBeenDone = List<bool>.filled(multipleAnswerQuizList.length, false);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          backgroundColor: Colors.black,
+          title: Text("QUIZ"),
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back_ios,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ),
+        body: Container(
+          color: Colors.grey,
+          alignment: Alignment.topCenter,
+          child: Column(
+            children: <Widget>[
+              _buildTopRow(),
+              _buildImage(),
+              _buildQuestion(),
+              _buildOptionsRow(0, 1),
+              SizedBox(height: 20),
+              _buildOptionsRow(2, 3),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTopRow() {
+    return Container(
+      padding: EdgeInsets.all(10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          InkWell(
+            onTap: _generateHint,
+            child: Icon(
+              Icons.lightbulb,
+              size: 25.sp,
+              color: Colors.yellow[200],
+            ),
+          ),
+          InkWell(
+            onTap: () {}, // Add functionality if needed
+            child: Icon(
+              Icons.arrow_forward_ios,
+              size: 25.sp,
+              color: Colors.yellow[200],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildImage() {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: .05.sw, vertical: .05.sh),
+      height: .4.sh,
+      child: Image.asset(
+        "images/${multipleAnswerQuizList[_questionNumber].image}.jpeg",
+      ),
+    );
+  }
+
+  Widget _buildQuestion() {
+    return Container(
+      height: .1.sh,
+      padding: EdgeInsets.symmetric(horizontal: .02.sw),
+      child: Text(
+        multipleAnswerQuizList[_questionNumber].question,
+        textAlign: TextAlign.center,
+        style: TextStyle(fontSize: 20.sp, color: Colors.white),
+      ),
+    );
+  }
+
+  Widget _buildOptionsRow(int index1, int index2) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: <Widget>[
+        _buildOptionButton(index1),
+        _buildOptionButton(index2),
+      ],
+    );
+  }
+
+  Widget _buildOptionButton(int index) {
+    final correctAnswer = multipleAnswerQuizList[_questionNumber].correct;
+    final isCorrect = correctAnswer == multipleAnswerQuizList[_questionNumber].options[index];
+    final color = _hintDone[index]
+        ? Colors.white70
+        : (_answerSelected && isCorrect)
+        ? Colors.green
+        : Color(0xff7EE7FD);
+
+    return Container(
+      height: .06.sh,
+      width: .4.sw,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(.02.sw),
+      ),
+      child: MaterialButton(
+        color: color,
+        onPressed: _hintDone[index] ? null : () => _handleAnswer(index, isCorrect),
+        child: Text(
+          multipleAnswerQuizList[_questionNumber].options[index],
+          style: TextStyle(fontSize: 10.sp, color: Colors.black),
+        ),
+      ),
+    );
+  }
+
+  void _generateHint() {
+    final correctAnswer = multipleAnswerQuizList[_questionNumber].correct;
+    final correctIndex = multipleAnswerQuizList[_questionNumber].options.indexOf(correctAnswer);
+
+    if (_hintsUsed < 3) {
+      int hintIndex;
+      do {
+        hintIndex = _random.nextInt(4);
+      } while (hintIndex == correctIndex || _hintDone[hintIndex]);
+
+      setState(() {
+        _hintsUsed++;
+        _hintDone[hintIndex] = true;
+      });
+    }
+  }
+
+  void _handleAnswer(int index, bool isCorrect) async {
+    if (isCorrect) {
+      _finalScore++;
+    }
+
+    setState(() {
+      _answerSelected = true;
+      _hintDone[index] = true;
+    });
+
+    await Future.delayed(Duration(seconds: 1));
+
+    setState(() {
+      _answerSelected = false;
+      _questionsDone++;
+      _hasBeenDone[_questionNumber] = true;
+    });
+
+    if (_questionsDone < multipleAnswerQuizList.length) {
+      _updateQuestion();
+    } else {
+      _showSummary();
+    }
+  }
+
+  void _updateQuestion() {
+    setState(() {
+      _hintsUsed = 0;
+      _hintDone = List<bool>.filled(4, false);
+      do {
+        _questionNumber = _random.nextInt(multipleAnswerQuizList.length);
+      } while (_hasBeenDone[_questionNumber]);
+    });
+  }
+
+  void _showSummary() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => Summary(score: _finalScore),
+      ),
+    );
+  }
+}
+
+class Summary extends StatelessWidget {
+  final int score;
+
+  const Summary({Key? key, required this.score}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                "Final Score: $score",
+                style: TextStyle(fontSize: 35.sp),
+              ),
+              SizedBox(height: 30),
+              MaterialButton(
+                color: Colors.red,
+                onPressed: () {
+                  Navigator.of(context).popUntil((route) => route.isFirst);
+                },
+                child: Text(
+                  "Reset Quiz",
+                  style: TextStyle(fontSize: 20.sp, color: Colors.white),
+                ),
+              ),
             ],
           ),
         ),

@@ -1,4 +1,5 @@
 import 'dart:async';
+//import 'dart:ffi';
 
 import 'package:superhero_word_game/wordsearch_words.dart';
 import 'package:flutter/material.dart';
@@ -15,13 +16,21 @@ class WordSearchWidget extends StatefulWidget {
 
 class _WordSearchWidget extends State<WordSearchWidget> {
   Duration duration = Duration();
+
   late Timer timer;
+  bool isPaused = false;
+  int pauseDuration = 5; // 5 seconds pause duration
+
+  int thisPauseDuration = 0;
+
   int minutes = 0;
   int seconds = 0;
 
   int record = 0;
+  String recordName = "";
 
   int finalTime = 0;
+  String recordNameEntered = "";
 
   int correctAnswers = 0;
   int totalAnswers = 0;
@@ -34,9 +43,8 @@ class _WordSearchWidget extends State<WordSearchWidget> {
 
   double boxDimensions = 0;
 
-
   late ValueNotifier<List<List<String>>> listChars;
-  late ValueNotifier<List<CrosswordAnswer>> answerList;
+  late ValueNotifier<List<WordsearchAnswer>> answerList;
   late ValueNotifier<CurrentDragObj> currentDragObj;
 
   late ValueNotifier<List<int>> charsDone;
@@ -48,16 +56,18 @@ class _WordSearchWidget extends State<WordSearchWidget> {
     getRecords();
     setVarsFromDifficulty();
 
-    if (.6.sh > .97.sw){
-      boxDimensions = .97.sw;}
-    else{
+    if (.6.sh > .97.sw) {
+      boxDimensions = .97.sw;
+    } else {
       boxDimensions = .6.sh;
     }
 
     listChars = new ValueNotifier<List<List<String>>>([]);
-    answerList = new ValueNotifier<List<CrosswordAnswer>>([]);
-    currentDragObj = new ValueNotifier<CurrentDragObj>(new CurrentDragObj());
-    charsDone = ValueNotifier<List<int>>(List<int>());
+    answerList = new ValueNotifier<List<WordsearchAnswer>>([]);
+    currentDragObj = new ValueNotifier<CurrentDragObj>(
+        CurrentDragObj(currentTouch: Offset.zero, indexArrayOnTouch: 0));
+    charsDone = ValueNotifier<List<int>>([]);
+
     generateRandomWord();
     startTimer();
   }
@@ -66,8 +76,30 @@ class _WordSearchWidget extends State<WordSearchWidget> {
     timer = Timer.periodic(Duration(seconds: 1), (_) => addTime());
   }
 
-  void addTime() {
+  /*void addTime() {
     final addSeconds = 1;
+
+    setState(() {
+      seconds = duration.inSeconds + addSeconds;
+
+      duration = Duration(seconds: seconds);
+    });
+  }*/
+
+  void addTime() {
+    int addSeconds = 0;
+
+    if (!isPaused) {
+      addSeconds = 1;
+    } else {
+      if (thisPauseDuration < pauseDuration) {
+        thisPauseDuration++;
+      } else {
+        isPaused = false;
+        thisPauseDuration = 0;
+        addSeconds = 1;
+      }
+    }
 
     setState(() {
       seconds = duration.inSeconds + addSeconds;
@@ -84,16 +116,17 @@ class _WordSearchWidget extends State<WordSearchWidget> {
       startTimer();
       getRecords();
       listChars = new ValueNotifier<List<List<String>>>([]);
-      answerList = new ValueNotifier<List<CrosswordAnswer>>([]);
-      currentDragObj = new ValueNotifier<CurrentDragObj>(new CurrentDragObj());
-      charsDone = new ValueNotifier<List<int>>(new List<int>());
+      answerList = new ValueNotifier<List<WordsearchAnswer>>([]);
+
+      charsDone = new ValueNotifier<List<int>>([]);
+
       generateRandomWord();
     });
   }
 
   @override
   void dispose() {
-    timer?.cancel();
+    timer.cancel();
     super.dispose();
   }
 
@@ -133,15 +166,21 @@ class _WordSearchWidget extends State<WordSearchWidget> {
 
   @override
   Widget build(BuildContext context) {
-
     //Size size = MediaQuery.of(context).size;
     String twoDigits(int n) => n.toString().padLeft(2, '0');
     final minutes = twoDigits(duration.inMinutes.remainder(60));
     final seconds = twoDigits(duration.inSeconds.remainder(60));
 
+    int numberOfPauses = 3; // Replace with the actual number of pauses
+
     return Scaffold(
         appBar: AppBar(
-          title: Text('$minutes:$seconds'),
+          title: Text(
+            '$minutes:$seconds',
+            style: TextStyle(
+              color: isPaused ? Colors.red : Colors.white,
+            ),
+          ),
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
@@ -154,7 +193,6 @@ class _WordSearchWidget extends State<WordSearchWidget> {
         ),
         body: Container(
             color: Colors.grey[300],
-
             alignment: Alignment.center,
             child: Container(
                 child: Column(
@@ -162,10 +200,66 @@ class _WordSearchWidget extends State<WordSearchWidget> {
                     mainAxisSize: MainAxisSize.max,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                  Container(
+                  /*IconButton(
+                        icon: Icon(
+                          Icons.pause,
+                          color: Colors.black,
+                        ),
+                        onPressed: () {
+                          isPaused = true;
+                        },
+                      ),*/
 
+                  Container(
+                    width: 50, // Set the desired width for the button
+                    height: 50, // Set the desired height for the button
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.black, width: 1),
+                      borderRadius: BorderRadius.circular(10),
+                      color: isPaused? Colors.white60 : Colors.white, // Background color for the button
+                    ),
+                    child: Stack(
+                      children: [
+                        Align(
+                          alignment: Alignment.center,
+                          child: IconButton(
+                            icon: Icon(
+                              Icons.pause,
+                              color: Colors.black,
+                              size: 30,
+                            ),
+                            onPressed: () {
+                              isPaused = true;
+                            },
+                          ),
+                        ),
+                        Positioned(
+                          top: 5, // Adjust the top position as needed
+                          right: 5, // Adjust the right position as needed
+                          child: Container(
+                            width: 20, // Set the width of the red bubble
+                            height: 20, // Set the height of the red bubble
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.red,
+                            ),
+                            child: Center(
+                              child: Text(
+                                '1', // The number of pauses can be displayed here
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
                     decoration: new BoxDecoration(
-                      border: Border.all(color: Colors.black),
+                        border: Border.all(color: Colors.black),
                         color: const Color(0xff7c94b6),
                         image: new DecorationImage(
                           colorFilter: new ColorFilter.mode(
@@ -188,27 +282,22 @@ class _WordSearchWidget extends State<WordSearchWidget> {
                     // lets show list word we need solve
                     child: drawAnswerList(),
                   ),
-                  /*ElevatedButton(
-                    child: Text("Reset"),
-                    onPressed: () {
-                      resetPuzzle();
-                    },
-                  )*/
                 ]))));
   }
 
-  void onDragEnd(PointerUpEvent event) {
+  void onDragEnd([PointerUpEvent? event]) {
     print("PointerUpEvent");
     // check if drag line object got value or not.. if no no need to clear
-    if (currentDragObj.value.currentDragLine == null) return;
-
-    currentDragObj.value.currentDragLine.clear();
+    //if (currentDragObj.value.currentDragLine.isNotEmpty) return;
+    print("touch is released");
+    currentDragObj.value.currentDragLine = [];
     currentDragObj.notifyListeners();
 
     checkForPuzzleComplete();
   }
 
   void onDragUpdate(PointerMoveEvent event) {
+    //void onDragUpdate(PointerMoveEvent event) {
     // generate ondragLine so we know to highlight path later & clear if condition dont meet .. :D
     generateLineOnDrag(event);
 
@@ -218,8 +307,7 @@ class _WordSearchWidget extends State<WordSearchWidget> {
       return answer.answerLines.join("-") ==
           currentDragObj.value.currentDragLine.join("-");
     });
-print(currentDragObj.value.currentDragLine.join("-"));
-
+    print(currentDragObj.value.currentDragLine.join("-"));
 
     if (indexFound >= 0) {
       answerList.value[indexFound].done = true;
@@ -229,7 +317,7 @@ print(currentDragObj.value.currentDragLine.join("-"));
       charsDone.value.addAll(answerList.value[indexFound].answerLines);
       charsDone.notifyListeners();
       answerList.notifyListeners();
-      onDragEnd(null!);
+      onDragEnd();
     }
   }
 
@@ -250,25 +338,38 @@ print(currentDragObj.value.currentDragLine.join("-"));
 
     if (difficulty == 1) record = prefs.getInt("easyWordSearchRecord") ?? 0;
     if (difficulty == 2) record = prefs.getInt("mediumWordSearchRecord") ?? 0;
-    if (difficulty == 3) record = prefs.getInt("hardWordSearchRecord") ?? 00;
+    if (difficulty == 3) record = prefs.getInt("hardWordSearchRecord") ?? 0;
     if (difficulty == 4) record = prefs.getInt("insaneWordSearchRecord") ?? 0;
+    if (difficulty == 1)
+      recordName = prefs.getString("easyWordSearchRecordName") ?? "";
+    if (difficulty == 2)
+      recordName = prefs.getString("mediumWordSearchRecordName") ?? "";
+    if (difficulty == 3)
+      recordName = prefs.getString("hardWordSearchRecordName") ?? "";
+    if (difficulty == 4)
+      recordName = prefs.getString("insaneWordSearchRecordName") ?? "";
 
     print('record: $record');
   }
 
   Future setRecords() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    if (difficulty == 1 && (finalTime < record || record == 0))
+    if (difficulty == 1 && (finalTime < record || record == 0)) {
       prefs.setInt("easyWordSearchRecord", finalTime);
-
-    if (difficulty == 2 && (finalTime < record || record == 0))
+      prefs.setString("easyWordSearchRecordName", recordNameEntered);
+    }
+    if (difficulty == 2 && (finalTime < record || record == 0)) {
       prefs.setInt("mediumWordSearchRecord", finalTime);
-
-    if (difficulty == 3 && (finalTime < record || record == 0))
+      prefs.setString("mediumWordSearchRecordName", recordNameEntered);
+    }
+    if (difficulty == 3 && (finalTime < record || record == 0)) {
       prefs.setInt("hardWordSearchRecord", finalTime);
-
-    if (difficulty == 4 && (finalTime < record || record == 0))
+      prefs.setString("hardWordSearchRecordName", recordNameEntered);
+    }
+    if (difficulty == 4 && (finalTime < record || record == 0)) {
       prefs.setInt("insaneWordSearchRecord", finalTime);
+      prefs.setString("insaneWordSearchRecordName", recordNameEntered);
+    }
   }
 
   Future<void> showRecord() async {
@@ -363,7 +464,7 @@ print(currentDragObj.value.currentDragLine.join("-"));
   int calculateIndexBasePosLocal(Offset localPosition) {
     // get size max per box
     double maxSizeBox =
-    //    ((sizeBox.width - (numBoxPerRow - 1) * padding) / numBoxPerRow);
+        //    ((sizeBox.width - (numBoxPerRow - 1) * padding) / numBoxPerRow);
         ((boxDimensions - (numBoxPerRow - 1) * padding) / numBoxPerRow);
 
     if (localPosition.dy > sizeBox.width || localPosition.dx > sizeBox.width)
@@ -400,8 +501,8 @@ print(currentDragObj.value.currentDragLine.join("-"));
 
   void generateLineOnDrag(PointerMoveEvent event) {
     // if current drag line is null, dlcare new list for we can save value
-    if (currentDragObj.value.currentDragLine == null)
-      currentDragObj.value.currentDragLine = new List<int>();
+    //if (currentDragObj.value.currentDragLine.isEmpty)
+    // currentDragObj.value.currentDragLine = [];
 
     // we need calculate index array base local position on drag
     int indexBase = calculateIndexBasePosLocal(event.localPosition);
@@ -410,7 +511,7 @@ print(currentDragObj.value.currentDragLine.join("-"));
       // check drag line already pass 2 box
       if (currentDragObj.value.currentDragLine.length >= 2) {
         // check drag line is straight line
-        WSOrientation wsOrientation;
+        late WSOrientation wsOrientation;
 
         if (currentDragObj.value.currentDragLine[0] % numBoxPerRow ==
             currentDragObj.value.currentDragLine[1] % numBoxPerRow)
@@ -423,13 +524,13 @@ print(currentDragObj.value.currentDragLine.join("-"));
         if (wsOrientation == WSOrientation.horizontal) {
           if (indexBase ~/ numBoxPerRow !=
               currentDragObj.value.currentDragLine[1] ~/ numBoxPerRow)
-            onDragEnd(null);
+            onDragEnd();
         } else if (wsOrientation == WSOrientation.vertical) {
           if (indexBase % numBoxPerRow !=
               currentDragObj.value.currentDragLine[1] % numBoxPerRow)
-            onDragEnd(null);
+            onDragEnd();
         } else
-          onDragEnd(null);
+          onDragEnd();
       }
 
       if (!currentDragObj.value.currentDragLine.contains(indexBase))
@@ -437,29 +538,38 @@ print(currentDragObj.value.currentDragLine.join("-"));
       else if (currentDragObj.value.currentDragLine.length >=
           2) if (currentDragObj.value.currentDragLine[
               currentDragObj.value.currentDragLine.length - 2] ==
-          indexBase) onDragEnd(null);
+          indexBase) onDragEnd();
     }
     // before mistake , should in here
     currentDragObj.notifyListeners();
+    setState(() {});
   }
 
   void onDragStart(int indexArray) {
+    currentDragObj.value.currentDragLine = [];
     try {
-      List<CrosswordAnswer> indexSelecteds = answerList.value
+      List<WordsearchAnswer> indexSelecteds = answerList.value
           .where((answer) => answer.indexArray == indexArray)
           .toList();
 
       // check indexSelecteds got any match , if 0 no proceed!
-      if (indexSelecteds.length == 0) return;
-      // nice triggered
-      currentDragObj.value.indexArrayOnTouch = indexArray;
+      if (indexSelecteds.isEmpty) return;
+
+      // Create a new instance of CurrentDragObj with initial values
+      currentDragObj = ValueNotifier<CurrentDragObj>(
+        CurrentDragObj(
+          indexArrayOnTouch: indexArray,
+          currentTouch: Offset.zero,
+        ),
+      );
+
       currentDragObj.notifyListeners();
     } catch (e) {}
   }
 
   // nice one
 
-  Widget drawCrosswordBox() {
+  /*Widget drawCrosswordBox() {
     // add listener tp catch drag, push down & up
     return Listener(
       onPointerUp: (event) => onDragEnd(event),
@@ -470,7 +580,7 @@ print(currentDragObj.value.currentDragLine.join("-"));
           sizeBox = Size(.7.sh, .7.sh);
           return GridView.builder(
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              childAspectRatio: 1,
+              childAspectRatio: 1.0,
               crossAxisCount: numBoxPerRow,
               crossAxisSpacing: padding,
               mainAxisSpacing: padding,
@@ -491,27 +601,85 @@ print(currentDragObj.value.currentDragLine.join("-"));
                 child: ValueListenableBuilder(
                   valueListenable: currentDragObj,
                   builder: (context, CurrentDragObj value, child) {
-                    Color color;
+                    Color _color;
 
                     if (value.currentDragLine.contains(index))
-                      color = Colors
+                      _color = Colors
                           .white24; // change color when path line is contain index
                     else if (charsDone.value.contains(index))
-                      color = Colors
+                      _color = Colors
                           .blueGrey; // change color box already path correct
 
                     return Container(
                       decoration: BoxDecoration(
-                        color: color,
-                      ),
+                          //color: color,
+                          ),
                       alignment: Alignment.center,
                       child: Text(
                         char.toUpperCase(),
                         style: TextStyle(
-                            fontSize: getFontSize(), fontWeight: FontWeight.bold),
+                            fontSize: getFontSize(),
+                            fontWeight: FontWeight.bold),
                       ),
                     );
                   },
+                ),
+              );
+            },
+          );
+        },
+      ),
+    );
+  }*/
+
+  Widget drawCrosswordBox() {
+    return Listener(
+      onPointerUp: (event) => onDragEnd(event),
+      onPointerMove: (event) => onDragUpdate(event),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          sizeBox = Size(.7.sh, .7.sh);
+
+          return GridView.builder(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              childAspectRatio: 1.0,
+              crossAxisCount: numBoxPerRow,
+              crossAxisSpacing: padding,
+              mainAxisSpacing: padding,
+            ),
+            itemCount: numBoxPerRow * numBoxPerRow,
+            physics: NeverScrollableScrollPhysics(),
+            itemBuilder: (context, index) {
+              String char = listChars.value.expand((e) => e).toList()[index];
+
+              bool isCurrentlyHighlighted =
+                  currentDragObj.value.currentDragLine.contains(index);
+              // Check if the current grid cell is part of the correct answer
+              bool isCorrectCell = charsDone.value.contains(index);
+
+              Color cellColor = isCurrentlyHighlighted
+                  ? Colors.white12.withOpacity(0.5)
+                  : isCorrectCell
+                      ? Colors.grey.withOpacity(0.8)
+                      : Colors.transparent; // Change color based on condition
+
+              return GestureDetector(
+                onTap: () {
+                  // Handle tap on grid cell if needed
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: cellColor,
+                    //border: Border.all(color: Colors.black),
+                  ),
+                  alignment: Alignment.center,
+                  child: Text(
+                    char.toUpperCase(),
+                    style: TextStyle(
+                      fontSize: getFontSize(),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
               );
             },
@@ -526,16 +694,16 @@ print(currentDragObj.value.currentDragLine.join("-"));
 
     final List<String> words = getWords(categorySelection);
 
-    List<String> wl = [];
+    List<String> wordSearchWordList = [];
 
     for (int i = 0; i < maxCount; i++) {
-      wl.add(words[i]);
+      wordSearchWordList.add(words[i]);
     }
 
     // setup configuration to generate crossword
 
     // Create the puzzle sessting object
-    final WSSettings ws = WSSettings(
+    final WSSettings wordSearchSettings = WSSettings(
       width: numBoxPerRow,
       height: numBoxPerRow,
       orientations: List.from([
@@ -543,30 +711,32 @@ print(currentDragObj.value.currentDragLine.join("-"));
         WSOrientation.horizontalBack,
         WSOrientation.vertical,
         WSOrientation.verticalUp,
-        // WSOrientation.diagonal,
-        // WSOrientation.diagonalUp,
+        //WSOrientation.diagonal,
+        //WSOrientation.diagonalUp,
       ]),
     );
 
     // Create new instance of the WordSearch class
-    final WordSearch wordSearch = WordSearch();
+    final WordSearchSafety wordSearch = WordSearchSafety();
 
     // Create a new puzzle
-    final WSNewPuzzle newPuzzle = wordSearch.newPuzzle(wl, ws);
+    final WSNewPuzzle newPuzzle =
+        wordSearch.newPuzzle(wordSearchWordList, wordSearchSettings);
 
     /// Check if there are errors generated while creating the puzzle
-    if (newPuzzle.errors.isEmpty) {
+    if (newPuzzle.errors!.isEmpty) {
       // if no error.. proceed
 
       // List<List<String>> charsArray = newPuzzle.puzzle;
-      listChars.value = newPuzzle.puzzle;
+      listChars.value = newPuzzle.puzzle!;
       // done pass..ez
 
       // Solve puzzle for given word list
-      final WSSolved solved = wordSearch.solvePuzzle(newPuzzle.puzzle, wl);
+      final WSSolved solved =
+          wordSearch.solvePuzzle(newPuzzle.puzzle!, wordSearchWordList);
 
-      answerList.value = solved.found
-          .map((solve) => new CrosswordAnswer(solve, numPerRow: numBoxPerRow))
+      answerList.value = solved.found!
+          .map((solve) => new WordsearchAnswer(solve, numPerRow: numBoxPerRow))
           .toList();
     }
   }
@@ -576,7 +746,7 @@ print(currentDragObj.value.currentDragLine.join("-"));
       height: .25.sh,
       child: ValueListenableBuilder(
         valueListenable: answerList,
-        builder: (context, List<CrosswordAnswer> value, child) {
+        builder: (context, List<WordsearchAnswer> value, child) {
           // lets make custom widget using Column & Row
 
           // how many row child we want show per row?
@@ -635,7 +805,7 @@ print(currentDragObj.value.currentDragLine.join("-"));
   }
 
   getFontSize() {
-    switch (difficulty){
+    switch (difficulty) {
       case 1:
         return 20.sp;
       case 2:
@@ -648,7 +818,7 @@ print(currentDragObj.value.currentDragLine.join("-"));
   }
 
   getAnswersFontSize() {
-    switch (difficulty){
+    switch (difficulty) {
       case 1:
         return 16.sp;
       case 2:
@@ -662,24 +832,24 @@ print(currentDragObj.value.currentDragLine.join("-"));
 }
 
 class CurrentDragObj {
-  Offset currentDragPos;
-  Offset currentTouch;
-  int indexArrayOnTouch;
-  List<int> currentDragLine = new List<int>();
+  late Offset currentDragPos;
+  late Offset currentTouch;
+  int indexArrayOnTouch = 0;
+  List<int> currentDragLine = [];
 
   CurrentDragObj({
-    this.indexArrayOnTouch,
-    this.currentTouch,
+    required this.indexArrayOnTouch,
+    required this.currentTouch,
   });
 }
 
-class CrosswordAnswer {
+class WordsearchAnswer {
   bool done = false;
-  int indexArray;
-  WSLocation wsLocation;
-  List<int> answerLines;
+  int indexArray = 0;
+  late WSLocation wsLocation;
+  late List<int> answerLines;
 
-  CrosswordAnswer(this.wsLocation, {int numPerRow}) {
+  WordsearchAnswer(this.wsLocation, {required int numPerRow}) {
     this.indexArray = this.wsLocation.y * numPerRow + this.wsLocation.x;
     generateAnswerLine(numPerRow);
   }
@@ -687,7 +857,7 @@ class CrosswordAnswer {
   // get answer index for each character word
   void generateAnswerLine(int numPerRow) {
     // declare new list<int>
-    this.answerLines = new List<int>();
+    this.answerLines = [];
 
     // push all index based base word array
     this.answerLines.addAll(List<int>.generate(this.wsLocation.overlap,

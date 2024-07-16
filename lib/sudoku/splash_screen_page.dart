@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+/*import 'package:flutter/material.dart';
 import 'package:splashscreen/splashscreen.dart';
 
 import 'main.dart';
@@ -44,3 +44,4 @@ class SplashScreenPageState extends State<SplashScreenPage> {
     );
   }
 }
+*/

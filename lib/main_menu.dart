@@ -151,12 +151,13 @@ class _MainMenu extends State<MainMenu> {
       ),
     );
   }
-}
-*/
+}*/
+
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import 'guesstheimage.dart';
+import 'guess_the_image.dart';
 import 'quiz.dart';
 import 'sudoku/main.dart';
 import 'wordsearch_menu.dart';
@@ -193,7 +194,7 @@ class _MainMenu extends State<MainMenu> {
                           button("Word Search", "wordsearch"),
                           button("Guess the Image", "guesstheimage"),
                           button("Quiz", "quiz"),
-                          button("Sudoku", "sudoku"),
+                          //button("Sudoku", "sudoku"),
                         ],
                       ),
                     ),
@@ -215,7 +216,7 @@ class _MainMenu extends State<MainMenu> {
           case "guesstheimage":
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => WordFind(),
+                builder: (context) => GuessTheImageGame(),
               ),
             );
             break;
@@ -229,7 +230,7 @@ class _MainMenu extends State<MainMenu> {
           case "sudoku":
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => Sudoku(),
+                builder: (context) => MultiQuiz(),
               ),
             );
             break;
@@ -301,3 +302,4 @@ class _MainMenu extends State<MainMenu> {
     );
   }
 }
+

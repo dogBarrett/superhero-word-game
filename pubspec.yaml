@@ -30,6 +30,10 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.0
   crossword: ^0.0.3
+  sqflite: ^2.3.0
+  #path_provider: ^0.4.1
+  #shared_preferences: ^0.4.3
+  #loading: ^1.0.2
 
   # install this plugins 1st
   #word_search: ^0.1.2

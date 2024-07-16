@@ -102,13 +102,13 @@ class _WordSearchMenu extends State<WordSearchMenu> {
     return GestureDetector(
       onTap: () {
         categorySelection = text;
-        openCrossword();
+        openWordSearch();
       },
       child: getTile(title, text),
     );
   }
 
-  void openCrossword() {
+  void openWordSearch() {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => WordSearchWidget(),
